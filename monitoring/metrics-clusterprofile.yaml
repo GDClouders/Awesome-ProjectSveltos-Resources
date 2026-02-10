@@ -1,0 +1,24 @@
+apiVersion: config.projectsveltos.io/v1beta1
+kind: ClusterProfile
+metadata:
+  name: metrics-server-clusterprofile
+spec:
+  clusterSelector:
+    matchLabels:
+      metrics: base
+  syncMode: Continuous
+  helmCharts:
+  - repositoryURL:    https://kubernetes-sigs.github.io/metrics-server/
+    repositoryName:   metrics-server
+    chartName:        metrics-server/metrics-server
+    chartVersion:     v3.12.2
+    releaseName:      metrics-server
+    releaseNamespace: metrics
+    helmChartAction:  Install
+    values: |
+      defaultArgs:
+        - --cert-dir=/tmp
+        - --kubelet-preferred-address-types=InternalIP
+        - --kubelet-insecure-tls
+        - --kubelet-use-node-status-port
+        - --metric-resolution=15s
