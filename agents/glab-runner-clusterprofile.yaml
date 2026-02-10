@@ -1,0 +1,26 @@
+apiVersion: config.projectsveltos.io/v1beta1
+kind: ClusterProfile
+metadata:
+  name: glab-runner-clusterprofile
+spec:
+  clusterSelector:
+    matchLabels:
+      glabagent: "yes"
+  syncMode: Continuous
+  helmCharts:
+  - repositoryURL:    https://charts.gitlab.io
+    repositoryName:   gitlab
+    chartName:        gitlab/gitlab-runner
+    chartVersion:     v0.82.0
+    releaseName:      gitlab-runner
+    releaseNamespace: gitlab
+    helmChartAction:  Install
+    values: |
+        gitlabUrl: "https://gitlab.com/"
+        runnerRegistrationToken: ${GITLAB_RUNNER_TOKEN}
+        rbac:
+          create: true
+        runners:
+          executor: kubernetes
+          tags: "${RUNNER_TAG}"
+          namespace: gitlab-runners
