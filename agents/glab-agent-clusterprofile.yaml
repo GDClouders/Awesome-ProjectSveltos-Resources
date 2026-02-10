@@ -1,0 +1,21 @@
+apiVersion: config.projectsveltos.io/v1beta1
+kind: ClusterProfile
+metadata:
+  name: glab-agent-clusterprofile
+spec:
+  clusterSelector:
+    matchLabels:
+      glabagent: "yes"
+  syncMode: Continuous
+  helmCharts:
+  - repositoryURL:    https://charts.gitlab.io
+    repositoryName:   gitlab
+    chartName:        gitlab/gitlab-agent
+    chartVersion:     v2.19.0
+    releaseName:      gitlab-agent
+    releaseNamespace: gitlab
+    helmChartAction:  Install
+    values: |
+      config:
+        kasAddress: wss://kas.gitlab.com
+        token: "${GITLAB_AGENT_TOKEN}"
