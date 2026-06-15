@@ -19,7 +19,7 @@ Install ProjectSveltos on your ClusterApi Management Cluster
 helm repo add projectsveltos https://projectsveltos.github.io/helm-charts
 ```
 ``` bash
-helm upgrade --install projectsveltos/sveltos-crds projectsveltos/sveltos-crds
+helm upgrade --install sveltos-crds projectsveltos/sveltos-crds
 ```
 
 ``` bash
