@@ -1,0 +1,10 @@
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: awesome-projectsveltos-resources
+  namespace: flux2
+spec:
+  interval: 5m
+  ref:
+    branch: main 
+  url: https://github.com/GDClouders/Awesome-ProjectSveltos-Resources.git
