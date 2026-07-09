@@ -7,13 +7,6 @@ spec:
     matchLabels:
       network: calico
   syncMode: Continuous
-  
-
-  policyRefs:
-  - kind: GitRepository
-    name: awesome-projectsveltos-resources
-    namespace: flux2
-    path: ./networking/calico/configs/  
 
   helmCharts:
   - repositoryURL:    https://docs.tigera.io/calico/charts
