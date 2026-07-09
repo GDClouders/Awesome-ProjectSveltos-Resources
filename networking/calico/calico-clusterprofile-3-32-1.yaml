@@ -8,7 +8,7 @@ spec:
   clusterSelector:
     matchLabels:
       network: calico
-  syncMode: Continuous
+  syncMode: ContinuousWithDriftDetection
 
   helmCharts:
   - repositoryURL:    https://docs.tigera.io/calico/charts
