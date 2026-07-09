@@ -1,7 +1,7 @@
 apiVersion: config.projectsveltos.io/v1beta1
 kind: ClusterProfile
 metadata:
-  name: calico-clusterprofile-config
+  name: calico-clusterprofile
 spec:
   continueOnError: true
   clusterSelector:
