@@ -1,0 +1,20 @@
+apiVersion: v1
+data:
+  ebpf-settings.yaml: "# This section includes base Calico installation configuration.\n#
+    For more information, see: https://docs.tigera.io/calico/latest/reference/installation/api#operator.tigera.io/v1.Installation\napiVersion:
+    operator.tigera.io/v1\nkind: Installation\nmetadata:\n  name: default\nspec:\n
+    \ # Configures Calico networking.\n  calicoNetwork:\n    nodeAddressAutodetectionV4:\n
+    \     firstFound: false\n      cidrs: \n        - \"172.16.200.0/24\"\n    linuxDataplane:
+    BPF\n    bpfNetworkBootstrap: Enabled\n    kubeProxyManagement: Enabled\n    ipPools:\n
+    \     - name: default-ipv4-ippool\n        blockSize: 26\n        cidr: 192.168.0.0/16\n
+    \       encapsulation: VXLANCrossSubnet\n        natOutgoing: Enabled\n        nodeSelector:
+    all()\n\n---\n# This section configures the Calico API server.\n# For more information,
+    see: https://docs.tigera.io/calico/latest/reference/installation/api#operator.tigera.io/v1.APIServer\napiVersion:
+    operator.tigera.io/v1\nkind: APIServer\nmetadata:\n  name: default\nspec: {}\n\n---\n#
+    Configures the Calico Goldmane flow aggregator.\napiVersion: operator.tigera.io/v1\nkind:
+    Goldmane\nmetadata:\n  name: default\n\n---\n# Configures the Calico Whisker observability
+    UI.\napiVersion: operator.tigera.io/v1\nkind: Whisker\nmetadata:\n  name: default"
+kind: ConfigMap
+metadata:
+  name: ebpf-settings
+  namespace: default

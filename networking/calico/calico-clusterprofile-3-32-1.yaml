@@ -1,0 +1,25 @@
+apiVersion: config.projectsveltos.io/v1beta1
+kind: ClusterProfile
+metadata:
+  name: calico-clusterprofile
+spec:
+  clusterSelector:
+    matchLabels:
+      network: calico
+  syncMode: Continuous
+  
+
+  policyRefs:
+  - kind: GitRepositoryRef
+    name: awesome-projectsveltos-resources
+    namespace: flux2
+    path: ./networking/calico/configs/  
+
+  helmCharts:
+  - repositoryURL:    https://docs.tigera.io/calico/charts
+    repositoryName:   projectcalico
+    chartName:        projectcalico/tigera-operator
+    chartVersion:     v3.32.1
+    releaseName:      calico
+    releaseNamespace: tigera-operator
+    helmChartAction:  Install
