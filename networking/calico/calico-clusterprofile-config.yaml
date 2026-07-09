@@ -1,0 +1,16 @@
+apiVersion: config.projectsveltos.io/v1beta1
+kind: ClusterProfile
+metadata:
+  name: calico-clusterprofile-config
+spec:
+  clusterSelector:
+    matchLabels:
+      network: calico
+  syncMode: Continuous
+  
+  policyRefs:
+  - kind: GitRepository
+    name: awesome-projectsveltos-resources
+    namespace: flux2
+    path: ./networking/calico/configs/  
+
