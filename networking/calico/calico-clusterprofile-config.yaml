@@ -6,8 +6,7 @@ spec:
   clusterSelector:
     matchLabels:
       network: calico
-  syncMode: Continuous
-  
+  syncMode: ContinuousWithDriftDetection
   policyRefs:
   - kind: GitRepository
     name: awesome-projectsveltos-resources
