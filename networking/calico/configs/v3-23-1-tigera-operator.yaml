@@ -772,7 +772,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: kubernetes-services-endpoint
-                optional: true
+                optional: false
       volumes:
         - name: var-lib-calico
           hostPath:
