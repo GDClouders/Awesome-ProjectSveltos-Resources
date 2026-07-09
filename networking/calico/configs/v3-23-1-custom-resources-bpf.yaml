@@ -8,8 +8,8 @@ spec:
   # Configures Calico networking.
   calicoNetwork:
     linuxDataplane: BPF
-    bpfNetworkBootstrap: Enabled
-    kubeProxyManagement: Enabled
+#    bpfNetworkBootstrap: Enabled
+#    kubeProxyManagement: Enabled
     ipPools:
       - name: default-ipv4-ippool
         blockSize: 26
