@@ -3,6 +3,7 @@ kind: ClusterProfile
 metadata:
   name: calico-clusterprofile
 spec:
+  dependsOn: calico-clusterprofile-config
   clusterSelector:
     matchLabels:
       network: calico
