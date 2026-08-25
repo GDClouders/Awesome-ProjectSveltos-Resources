@@ -2,9 +2,29 @@
 apiVersion: config.projectsveltos.io/v1beta1
 kind: ClusterProfile
 metadata:
+  name: calico-crd-clusterprofile-vxlan-v3-32-0
+spec:
+  clusterSelector:
+    matchLabels:
+      network: calico-vxlan-v3-32-0
+  syncMode: ContinuousWithDriftDetection
+  helmCharts:
+  - repositoryURL: https://projectcalico.docs.tigera.io/charts
+    repositoryName: projectcalico
+    chartName: crd.projectcalico.org.v1
+    chartVersion: v3.32.0
+    releaseName: calico-crd
+    releaseNamespace: default
+    helmChartAction: Install
+---
+apiVersion: config.projectsveltos.io/v1beta1
+kind: ClusterProfile
+metadata:
   name: calico-clusterprofile-vxlan-v3-32-0
 spec:
   continueOnError: true
+  dependsOn:
+  - calico-crd-clusterprofile-vxlan-v3-32-0
   clusterSelector:
     matchLabels:
       network: calico-vxlan-v3-32-0
