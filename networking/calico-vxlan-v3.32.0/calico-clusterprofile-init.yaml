@@ -1,0 +1,16 @@
+---
+apiVersion: config.projectsveltos.io/v1beta1
+kind: ClusterProfile
+metadata:
+  name: calico-clusterprofile-vxlan-v3-32-0
+spec:
+  continueOnError: true
+  clusterSelector:
+    matchLabels:
+      network: calico-vxlan-v3-32-0
+  syncMode: ContinuousWithDriftDetection
+  policyRefs:
+  - kind: GitRepository
+    name: awesome-projectsveltos-resources
+    namespace: flux2
+    path: ./networking/calico-vxlan-v3.32.0/configs/  
