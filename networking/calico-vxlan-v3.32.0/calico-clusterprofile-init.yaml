@@ -13,4 +13,20 @@ spec:
   - kind: GitRepository
     name: awesome-projectsveltos-resources
     namespace: flux2
-    path: ./networking/calico-vxlan-v3.32.0/configs/  
+    path: ./networking/calico-vxlan-v3.32.0/configs/
+  helmCharts:
+  - repositoryURL:    https://projectcalico.docs.tigera.io/charts
+    repositoryName:   projectcalico
+    chartName:        projectcalico/tigera-operator
+    chartVersion:     v3.32.0
+    releaseName:      calico
+    releaseNamespace: tigera-operator
+    helmChartAction:  Install
+    values: |
+      installation:
+        calicoNetwork:
+          ipPools:
+          {{ range $cidr := .Cluster.spec.clusterNetwork.pods.cidrBlocks }}
+            - cidr: {{ $cidr }}
+              encapsulation: VXLAN
+          {{ end }}
