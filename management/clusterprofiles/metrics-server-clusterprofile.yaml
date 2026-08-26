@@ -6,7 +6,7 @@ spec:
   clusterSelector:
     matchLabels:
       metrics: base
-  syncMode: Continuous
+  syncMode: ContinuousWithDriftDetection
   helmCharts:
   - repositoryURL:    https://kubernetes-sigs.github.io/metrics-server/
     repositoryName:   metrics-server
