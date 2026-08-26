@@ -1,0 +1,15 @@
+apiVersion: config.projectsveltos.io/v1beta1
+kind: ClusterProfile
+metadata:
+  name: metallb-0-15-2
+spec:
+  continueOnError: true
+  clusterSelector:
+    matchLabels:
+      loadbalancer: metallb-0-15-2
+  syncMode: ContinuousWithDriftDetection
+  policyRefs:
+  - kind: GitRepository
+    name: awesome-projectsveltos-resources
+    namespace: flux2
+    path: ./networking/calico/configs/
