@@ -16,5 +16,4 @@ spec:
     repositoryURL: https://fluxcd-community.github.io/helm-charts
     values: |
       policies:
-        create: false 
-
+        create: false

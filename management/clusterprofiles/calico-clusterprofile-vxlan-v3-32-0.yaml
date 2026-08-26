@@ -1,4 +1,3 @@
----
 apiVersion: config.projectsveltos.io/v1beta1
 kind: ClusterProfile
 metadata:
@@ -35,13 +34,13 @@ spec:
     namespace: flux2
     path: ./networking/calico-vxlan-v3.32.0/configs/
   helmCharts:
-  - repositoryURL:    https://projectcalico.docs.tigera.io/charts
-    repositoryName:   projectcalico
-    chartName:        projectcalico/tigera-operator
-    chartVersion:     v3.32.0
-    releaseName:      calico
+  - repositoryURL: https://projectcalico.docs.tigera.io/charts
+    repositoryName: projectcalico
+    chartName: projectcalico/tigera-operator
+    chartVersion: v3.32.0
+    releaseName: calico
     releaseNamespace: tigera-operator
-    helmChartAction:  Install
+    helmChartAction: Install
     values: |
       installation:
         calicoNetwork:

@@ -12,5 +12,4 @@ spec:
   - kind: GitRepository
     name: awesome-projectsveltos-resources
     namespace: flux2
-    path: ./networking/calico/configs/  
-
+    path: ./networking/calico/configs/
