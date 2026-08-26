@@ -12,7 +12,7 @@ A list of ClusterProfiles included in this repository.
 ### Ingress
 - **Envoy**
 ### Loadbalancer
-- **metallb**
+- **Metallb**
 
 ## Usage
 
