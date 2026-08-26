@@ -11,7 +11,8 @@ A list of ClusterProfiles included in this repository.
 - **Calico**
 ### Ingress
 - **Envoy**
-
+### Loadbalancer
+- **metallb**
 
 ## Usage
 
