@@ -17,8 +17,8 @@ spec:
     helmChartAction:  Install
     values: |
       route:
-        enabled: true
+        enabled: "true"
         hosts:
           - {{ index .Cluster.metadata.labels "gatus-host" }}
-        httpsRedirect: true
+        httpsRedirect: "true"
       externalConfigMap: "gatus-config"
