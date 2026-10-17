@@ -7,6 +7,7 @@ A list of ClusterProfiles included in this repository.
 - **Gitlab Runner**
 ### Monitoring  
 - **Metrics Server**
+- **Gatus Dashboard**
 ### Networking
 - **Calico**
 ### Ingress
