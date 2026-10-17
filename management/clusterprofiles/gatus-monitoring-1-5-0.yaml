@@ -1,0 +1,17 @@
+apiVersion: config.projectsveltos.io/v1beta1
+kind: ClusterProfile
+metadata:
+  name: gatus-dashboard-clusterprofile
+spec:
+  clusterSelector:
+    matchLabels:
+      monitoring: gatus
+  syncMode: ContinuousWithDriftDetection
+  helmCharts:
+  - repositoryURL:    https://twin.github.io/helm-charts
+    repositoryName:   twin
+    chartName:        twin/gatus
+    chartVersion:     v1.5.0
+    releaseName:      gatus-dashboard
+    releaseNamespace: monitoring
+    helmChartAction:  Install
