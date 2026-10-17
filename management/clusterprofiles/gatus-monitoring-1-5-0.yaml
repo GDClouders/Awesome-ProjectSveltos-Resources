@@ -15,3 +15,10 @@ spec:
     releaseName:      gatus-dashboard
     releaseNamespace: monitoring
     helmChartAction:  Install
+    values: |
+      route:
+        enabled: true
+        hosts:
+          - {{ index .Cluster.metadata.labels "gatus-host" }}
+        httpsRedirect: true
+       externalConfigMap: "gatus-config"
