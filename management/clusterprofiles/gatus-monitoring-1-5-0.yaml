@@ -21,4 +21,4 @@ spec:
         hosts:
           - {{ index .Cluster.metadata.labels "gatus-host" }}
         httpsRedirect: true
-       externalConfigMap: "gatus-config"
+      externalConfigMap: "gatus-config"
