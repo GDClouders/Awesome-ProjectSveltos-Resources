@@ -13,7 +13,7 @@ spec:
       chartName:        jetstack/cert-manager
       chartVersion:     v1.20.4
       releaseName:      cert-manager
-      releaseNamespace: cert-manager
+      releaseNamespace: '{{ index .Cluster.metadata.labels "cluster.x-k8s.io/cluster-name" }}'-cert-manager
       helmChartAction:  Install
       values: |
         crds:
