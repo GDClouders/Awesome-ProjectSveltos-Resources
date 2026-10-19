@@ -5,7 +5,7 @@ metadata:
 spec:
   clusterSelector:
     matchLabels:
-      cert-manager: yes
+      cert-manager: true
   syncMode: Continuous
   helmCharts:
     - repositoryURL:    https://charts.jetstack.io
