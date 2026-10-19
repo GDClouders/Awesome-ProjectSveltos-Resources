@@ -20,3 +20,4 @@ spec:
           enabled: true
         webhook:
           hostNetwork: true
+          securePort=10260
