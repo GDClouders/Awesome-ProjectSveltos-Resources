@@ -11,13 +11,10 @@ spec:
     - repositoryURL:    https://charts.jetstack.io
       repositoryName:   jetstack
       chartName:        jetstack/cert-manager
-      chartVersion:     v1.21.2
+      chartVersion:     v1.20.4
       releaseName:      cert-manager
       releaseNamespace: cert-manager
       helmChartAction:  Install
       values: |
         crds:
           enabled: true
-        webhook:
-          hostNetwork: true
-          securePort: 10260
