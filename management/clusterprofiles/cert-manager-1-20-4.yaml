@@ -6,7 +6,7 @@
     clusterSelector:
       matchLabels:
         cert-manager: enabled
-    syncMode: ContinuousWithDriftDetection
+    syncMode: ContinuousWithDriftDetections
     helmCharts:
       - repositoryURL:    https://charts.jetstack.io
         repositoryName:   jetstack
@@ -19,6 +19,5 @@
           crds:
             enabled: true
           config:
-            gatewayAPI:
-              enabled: true
+            enableGatewayAPI: true
     
