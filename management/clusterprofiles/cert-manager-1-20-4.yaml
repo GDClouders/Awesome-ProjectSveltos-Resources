@@ -6,7 +6,7 @@
     clusterSelector:
       matchLabels:
         cert-manager: enabled
-    syncMode: Continuous
+    syncMode: OneTime
     helmCharts:
       - repositoryURL:    https://charts.jetstack.io
         repositoryName:   jetstack
