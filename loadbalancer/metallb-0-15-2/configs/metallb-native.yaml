@@ -2129,3 +2129,14 @@ webhooks:
     resources:
     - l2advertisements
   sideEffects: None
+---
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: default
+  namespace: metallb-system
+spec:
+  addresses:
+  - '{{ index .Cluster.metadata.labels "loadbalancer-range" }}'
+  autoAssign: true
+  avoidBuggyIPs: false
