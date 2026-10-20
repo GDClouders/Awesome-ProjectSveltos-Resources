@@ -23,6 +23,6 @@ spec:
             - '{{ index .Cluster.metadata.labels "gatus-host" }}'
           httpsRedirect: "true"
           parentRefs:
-              name: public-gateway
+            - name: public-gateway
               namespace: envoy-gateway-system
       externalConfigMap: "gatus-config"
