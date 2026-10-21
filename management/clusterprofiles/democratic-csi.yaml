@@ -150,7 +150,7 @@ spec:
               username: root
             zfs:
               datasetParentName: tank/{{ index .Cluster.metadata.labels "cluster.x-k8s.io/cluster-name" }}
-              detachedSnapshotsDatasetParentName: tanks/{{ index .Cluster.metadata.labels "cluster.x-k8s.io/cluster-name" }}/snapshots
+              detachedSnapshotsDatasetParentName: tank/{{ index .Cluster.metadata.labels "cluster.x-k8s.io/cluster-name" }}/snapshots
               zvolBlocksize: null
               zvolEnableReservation: false
         enablePSP: false
