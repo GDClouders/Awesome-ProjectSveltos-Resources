@@ -9,7 +9,7 @@ spec:
       netbox: enabled
   syncMode: ContinuousWithDriftDetection
   helmCharts:
-    - repositoryURL:    oci://ghcr.io/netbox-community/netbox-chart/netbox
+    - repositoryURL:    oci://ghcr.io/netbox-community/netbox-chart
       repositoryName:   netbox
       chartName:        netbox
       chartVersion:     8.3.93
@@ -31,7 +31,7 @@ spec:
             memory: 2048Mi
         persistence:
           enabled: true
-          storageClass: '{{ index .Cluster.metadata.labels "local-storage-class" }}'
+          storageClass: {{ index .Cluster.metadata.labels "local-storage-class" }}
         httpRoute:
           enabled: true
           parentRefs:
@@ -40,7 +40,7 @@ spec:
             name: public-gateway
             namespace: envoy-gateway-system
           hostnames:
-            - netbox.'{{ index .Cluster.metadata.labels "internaldomainname" }}'
+            - netbox.{{ index .Cluster.metadata.labels "internaldomainname" }}
         worker:
           resources:
             requests:
