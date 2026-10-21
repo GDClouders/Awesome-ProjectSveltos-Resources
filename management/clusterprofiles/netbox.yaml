@@ -44,8 +44,8 @@ spec:
         worker:
           resources:
             requests:
-              cpu: 2
+              cpu: 0.5
               memory: 512Mi
             limits:
-              cpu: 3
+              cpu: 1
               memory: 1024Mi
