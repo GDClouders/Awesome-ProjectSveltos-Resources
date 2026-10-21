@@ -1,0 +1,15 @@
+apiVersion: config.projectsveltos.io/v1beta1
+kind: ClusterProfile
+metadata:
+  name: local-path-provisioner
+spec:
+  continueOnError: true
+  clusterSelector:
+    matchLabels:
+      local-path-provisioner: enabled
+  syncMode: ContinuousWithDriftDetection
+  policyRefs:
+  - kind: GitRepository
+    name: awesome-projectsveltos-resources
+    namespace: flux2
+    path: ./storage/local-path-provisioner-0-0-37/configs/
