@@ -1,0 +1,51 @@
+# helm install netbox oci://ghcr.io/netbox-community/netbox-chart/netbox --namespace netbox --create-namespace --version 8.3.93 --values /tmp/netbox-values.yaml
+apiVersion: config.projectsveltos.io/v1beta1
+kind: ClusterProfile
+metadata:
+  name: deploy-netbox
+spec:
+  clusterSelector:
+    matchLabels:
+      netbox: enabled
+  syncMode: ContinuousWithDriftDetection
+  helmCharts:
+    - repositoryURL:    oci://ghcr.io/netbox-community/netbox-chart/netbox
+      repositoryName:   netbox
+      chartName:        netbox
+      chartVersion:     8.3.93
+      releaseName:      netbox
+      releaseNamespace: netbox
+      helmChartAction:  Install
+      values: |
+        superuser:
+          name: admin
+          email: admin@example.com
+          password: "admin"
+        basePath: ""
+        resources:
+          requests:
+            cpu: 2
+            memory: 512Mi
+          limits:
+            cpu: 3
+            memory: 2048Mi
+        persistence:
+          enabled: true
+          storageClass: '{{ index .Cluster.metadata.labels "local-storage-class" }}'
+        httpRoute:
+          enabled: true
+          parentRefs:
+          - group: gateway.networking.k8s.io
+            kind: Gateway
+            name: public-gateway
+            namespace: envoy-gateway-system
+          hostnames:
+            - netbox.'{{ index .Cluster.metadata.labels "internaldomainname" }}'
+        worker:
+          resources:
+            requests:
+              cpu: 2
+              memory: 512Mi
+            limits:
+              cpu: 3
+              memory: 1024Mi
