@@ -1,0 +1,192 @@
+controller:
+  clusterDriverRegistrar:
+    enabled: false
+  dnsPolicy: ClusterFirst
+  driver:
+    enabled: true
+    image:
+      registry: ghcr.io/democratic-csi/democratic-csi
+      tag: latest
+    logLevel: info
+  enabled: true
+  externalAttacher:
+    args:
+    - --v={{ .Values.controller.externalAttacher.verbosityLevel }}
+    - --leader-election
+    - --leader-election-namespace={{ .Release.Namespace }}
+    - --timeout=90s
+    - --worker-threads=10
+    - --csi-address={{ .csiSocketAddress }}
+    enabled: true
+    image:
+      registry: registry.k8s.io/sig-storage/csi-attacher
+      tag: v4.4.0
+    verbosityLevel: 5
+  externalHealthMonitorController:
+    args:
+    - --v={{ .Values.controller.externalHealthMonitorController.verbosityLevel }}
+    - --leader-election
+    - --leader-election-namespace={{ .Release.Namespace }}
+    - --timeout=90s
+    - --worker-threads=10
+    - --csi-address={{ .csiSocketAddress }}
+    enabled: false
+    image:
+      registry: registry.k8s.io/sig-storage/csi-external-health-monitor-controller
+      tag: v0.14.0
+    verbosityLevel: 5
+  externalProvisioner:
+    args:
+    - --v={{ .Values.controller.externalProvisioner.verbosityLevel }}
+    - --leader-election
+    - --leader-election-namespace={{ .Release.Namespace }}
+    - --timeout=90s
+    - --worker-threads=10
+    - --extra-create-metadata
+    - --csi-address={{ .csiSocketAddress }}
+    enabled: true
+    image:
+      registry: registry.k8s.io/sig-storage/csi-provisioner
+      tag: v3.6.0
+    verbosityLevel: 5
+  externalResizer:
+    args:
+    - --v={{ .Values.controller.externalResizer.verbosityLevel }}
+    - --leader-election
+    - --leader-election-namespace={{ .Release.Namespace }}
+    - --timeout=90s
+    - --workers=10
+    - --csi-address={{ .csiSocketAddress }}
+    enabled: true
+    image:
+      registry: registry.k8s.io/sig-storage/csi-resizer
+      tag: v1.9.0
+    verbosityLevel: 5
+  externalSnapshotter:
+    args:
+    - --v={{ .Values.controller.externalSnapshotter.verbosityLevel }}
+    - --leader-election
+    - --leader-election-namespace={{ .Release.Namespace }}
+    - --timeout=90s
+    - --worker-threads=10
+    - --csi-address={{ .csiSocketAddress }}
+    enabled: true
+    image:
+      registry: registry.k8s.io/sig-storage/csi-snapshotter
+      tag: v8.2.1
+    verbosityLevel: 5
+  hostIPC: false
+  hostNetwork: false
+  livenessProbe:
+    enabled: true
+  priorityClassName: system-cluster-critical
+  rbac:
+    enabled: true
+    openshift:
+      privileged: false
+  replicaCount: 1
+  strategy: deployment
+csiDriver:
+  attachRequired: true
+  enabled: true
+  name: org.democratic-csi.iscsi
+  podInfoOnMount: true
+  version: 1.5.0
+csiProxy:
+  enabled: true
+  image:
+    registry: ghcr.io/democratic-csi/csi-grpc-proxy
+    tag: v0.5.7
+  resources: null
+driver:
+  config:
+    driver: zfs-generic-iscsi
+    iscsi:
+      namePrefix: pvc-
+      nameSuffix: pvc-
+      shareStrategy: targetCli
+      shareStrategyPcs:
+        auth:
+          enabled: 0
+          incoming_password: bar
+          incoming_username: foo
+        basename: iqn.2026-10.{{ index .Cluster.metadata.labels "internaldomainname" }}.{{ index .Cluster.metadata.labels "cluster.x-k8s.io/cluster-name" }}
+        pcs_group: group-nas
+      shareStrategyTargetCli:
+        basename: iqn.2026-10.{{ index .Cluster.metadata.labels "internaldomainname" }}.{{ index .Cluster.metadata.labels "cluster.x-k8s.io/cluster-name" }}
+        block:
+          attributes:
+            emulate_tpu: 0
+        tpg:
+          attributes:
+            authentication: 0
+            cache_dynamic_acls: 1
+            demo_mode_write_protect: 0
+            generate_node_acls: 1
+          auth: null
+      targetPortal: iscsi.{{ index .Cluster.metadata.labels "cluster.x-k8s.io/cluster-name" }}.{{ index .Cluster.metadata.labels "internaldomainname" }}:3260
+    sshConnection:
+      host: iscsi.{{ index .Cluster.metadata.labels "cluster.x-k8s.io/cluster-name" }}.{{ index .Cluster.metadata.labels "internaldomainname" }}
+      password: password
+      port: 22
+      username: root
+    zfs:
+      datasetParentName: tank/{{ index .Cluster.metadata.labels "cluster.x-k8s.io/cluster-name" }}
+      detachedSnapshotsDatasetParentName: tanks/{{ index .Cluster.metadata.labels "cluster.x-k8s.io/cluster-name" }}/snapshots
+      zvolBlocksize: null
+      zvolEnableReservation: false
+enablePSP: false
+node:
+  cleanup:
+    image:
+      registry: docker.io/busybox
+      tag: 1.37.0
+    resources: null
+  dnsPolicy: ClusterFirstWithHostNet
+  driver:
+    enabled: true
+    image:
+      registry: ghcr.io/democratic-csi/democratic-csi
+      tag: latest
+    iscsiDirHostPath: /etc/iscsi
+    iscsiDirHostPathType: Directory
+    localtimeHostPath: /etc/localtime
+    logLevel: info
+    nvmeDirHostPath: /etc/nvme
+    nvmeDirHostPathType: Directory
+    nvmeDirMountEnabled: false
+  driverRegistrar:
+    args:
+    - --v={{ .Values.node.driverRegistrar.verbosityLevel }}
+    - --csi-address={{ .csiSocketAddress }}
+    - --kubelet-registration-path={{ .Values.node.kubeletHostPath }}/plugins/{{ .Values.csiDriver.name
+      }}/csi.sock
+    enabled: true
+    image:
+      registry: registry.k8s.io/sig-storage/csi-node-driver-registrar
+      tag: v2.9.0
+    verbosityLevel: 5
+  enabled: true
+  hostIPC: true
+  hostNetwork: true
+  hostPID: false
+  kubeletHostPath: /var/lib/kubelet
+  linux:
+    enabled: true
+  livenessProbe:
+    enabled: true
+  priorityClassName: system-node-critical
+  rbac:
+    enabled: true
+    openshift:
+      privileged: false
+  windows:
+    enabled: false
+storageClasses:
+- allowVolumeExpansion: true
+  defaultClass: false
+  name: democratic-iscsi-default
+  parameters:
+    fsType: ext4
+  reclaimPolicy: Delete
+  volumeBindingMode: Immediate

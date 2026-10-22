@@ -29,12 +29,13 @@ spec:
           enabled: true
           externalAttacher:
             args:
-            - --v={{ .Values.controller.externalAttacher.verbosityLevel }}
+            - --v=5
             - --leader-election
-            - --leader-election-namespace={{ .Release.Namespace }}
+            - --leader-election-namespace=democratic-csi
             - --timeout=90s
             - --worker-threads=10
-            - --csi-address={{ .csiSocketAddress }}
+            - --csi-address=/csi-data/csi.sock.internal
+
             enabled: true
             image:
               registry: registry.k8s.io/sig-storage/csi-attacher
@@ -42,12 +43,13 @@ spec:
             verbosityLevel: 5
           externalHealthMonitorController:
             args:
-            - --v={{ .Values.controller.externalHealthMonitorController.verbosityLevel }}
+            - --v=5
             - --leader-election
             - --leader-election-namespace={{ .Release.Namespace }}
             - --timeout=90s
             - --worker-threads=10
-            - --csi-address={{ .csiSocketAddress }}
+            - --csi-address=/csi-data/csi.sock.internal
+
             enabled: false
             image:
               registry: registry.k8s.io/sig-storage/csi-external-health-monitor-controller
@@ -57,11 +59,12 @@ spec:
             args:
             - --v={{ .Values.controller.externalProvisioner.verbosityLevel }}
             - --leader-election
-            - --leader-election-namespace={{ .Release.Namespace }}
+            - --leader-election-namespace=dem
             - --timeout=90s
             - --worker-threads=10
             - --extra-create-metadata
-            - --csi-address={{ .csiSocketAddress }}
+            - --csi-address=/csi-data/csi.sock.internal
+
             enabled: true
             image:
               registry: registry.k8s.io/sig-storage/csi-provisioner
@@ -74,7 +77,8 @@ spec:
             - --leader-election-namespace={{ .Release.Namespace }}
             - --timeout=90s
             - --workers=10
-            - --csi-address={{ .csiSocketAddress }}
+            - --csi-address=/csi-data/csi.sock.internal
+
             enabled: true
             image:
               registry: registry.k8s.io/sig-storage/csi-resizer
@@ -87,7 +91,8 @@ spec:
             - --leader-election-namespace={{ .Release.Namespace }}
             - --timeout=90s
             - --worker-threads=10
-            - --csi-address={{ .csiSocketAddress }}
+            - --csi-address=/csi-data/csi.sock.internal
+
             enabled: true
             image:
               registry: registry.k8s.io/sig-storage/csi-snapshotter
@@ -175,8 +180,9 @@ spec:
             nvmeDirMountEnabled: false
           driverRegistrar:
             args:
-            - --v={{ .Values.node.driverRegistrar.verbosityLevel }}
-            - --csi-address={{ .csiSocketAddress }}
+            - --v=5
+            - --csi-address=/csi-data/csi.sock.internal
+
             - --kubelet-registration-path={{ .Values.node.kubeletHostPath }}/plugins/{{ .Values.csiDriver.name
               }}/csi.sock
             enabled: true
