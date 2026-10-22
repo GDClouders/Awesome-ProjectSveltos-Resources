@@ -45,7 +45,7 @@ spec:
             args:
             - --v=5
             - --leader-election
-            - --leader-election-namespace={{ .Release.Namespace }}
+            - --leader-election-namespace=democratic-csi
             - --timeout=90s
             - --worker-threads=10
             - --csi-address=/csi-data/csi.sock.internal
@@ -57,7 +57,7 @@ spec:
             verbosityLevel: 5
           externalProvisioner:
             args:
-            - --v={{ .Values.controller.externalProvisioner.verbosityLevel }}
+            - --v=5
             - --leader-election
             - --leader-election-namespace=dem
             - --timeout=90s
@@ -72,9 +72,9 @@ spec:
             verbosityLevel: 5
           externalResizer:
             args:
-            - --v={{ .Values.controller.externalResizer.verbosityLevel }}
+            - --v=5
             - --leader-election
-            - --leader-election-namespace={{ .Release.Namespace }}
+            - --leader-election-namespace=democratic-csi
             - --timeout=90s
             - --workers=10
             - --csi-address=/csi-data/csi.sock.internal
@@ -86,9 +86,9 @@ spec:
             verbosityLevel: 5
           externalSnapshotter:
             args:
-            - --v={{ .Values.controller.externalSnapshotter.verbosityLevel }}
+            - --v=5
             - --leader-election
-            - --leader-election-namespace={{ .Release.Namespace }}
+            - --leader-election-namespace=democratic-csi
             - --timeout=90s
             - --worker-threads=10
             - --csi-address=/csi-data/csi.sock.internal
@@ -183,7 +183,7 @@ spec:
             - --v=5
             - --csi-address=/csi-data/csi.sock.internal
 
-            - --kubelet-registration-path={{ .Values.node.kubeletHostPath }}/plugins/{{ .Values.csiDriver.name
+            - --kubelet-registration-path=/var/lib/kubelet/plugins/org.democratic-csi.iscsi
               }}/csi.sock
             enabled: true
             image:
