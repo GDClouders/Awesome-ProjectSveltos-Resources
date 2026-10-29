@@ -182,9 +182,7 @@ spec:
             args:
             - --v=5
             - --csi-address=/csi-data/csi.sock.internal
-
             - --kubelet-registration-path=/var/lib/kubelet/plugins/org.democratic-csi.iscsi
-              }}/csi.sock
             enabled: true
             image:
               registry: registry.k8s.io/sig-storage/csi-node-driver-registrar
