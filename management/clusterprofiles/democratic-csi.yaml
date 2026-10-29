@@ -59,7 +59,7 @@ spec:
             args:
             - --v=5
             - --leader-election
-            - --leader-election-namespace=dem
+            - --leader-election-namespace=democratic-csi
             - --timeout=90s
             - --worker-threads=10
             - --extra-create-metadata
