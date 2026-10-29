@@ -150,7 +150,7 @@ spec:
               targetPortal: iscsi.{{ index .Cluster.metadata.labels "cluster.x-k8s.io/cluster-name" }}.{{ index .Cluster.metadata.labels "internaldomainname" }}:3260
             sshConnection:
               host: iscsi.{{ index .Cluster.metadata.labels "cluster.x-k8s.io/cluster-name" }}.{{ index .Cluster.metadata.labels "internaldomainname" }}
-              password: password
+              password: {{ index .Cluster.metadata.labels "ssh-storage-pw" }}
               port: 22
               username: root
             zfs:
