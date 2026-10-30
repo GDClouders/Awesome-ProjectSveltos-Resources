@@ -31,7 +31,7 @@ spec:
           enabled: true
           certSource: auto
           auto:
-            commonName: '{{ index .Cluster.medatata.labels "cluster.x-k8s.io/cluster-name" }}-registry.{{ index .Cluster.metadata.labels "internaldomainname" }}'
+            commonName: '{{ index .Cluster.metadata.labels "cluster.x-k8s.io/cluster-name" }}-registry.{{ index .Cluster.metadata.labels "internaldomainname" }}'
         route:
           # References to the parent gateways
           parentRefs:
@@ -40,8 +40,8 @@ spec:
                 name: public-gateway
                 namespace: envoy-gateway-system
           hosts:
-            - '{{ index .Cluster.medatata.labels "cluster.x-k8s.io/cluster-name" }}-registry.{{ index .Cluster.metadata.labels "internaldomainname" }}'
-      externalURL: https://{{ index .Cluster.medatata.labels "cluster.x-k8s.io/cluster-name" }}-registry.{{ index .Cluster.metadata.labels "internaldomainname" }}
+            - '{{ index .Cluster.metadata.labels "cluster.x-k8s.io/cluster-name" }}-registry.{{ index .Cluster.metadata.labels "internaldomainname" }}'
+      externalURL: https://{{ index .Cluster.metadata.labels "cluster.x-k8s.io/cluster-name" }}-registry.{{ index .Cluster.metadata.labels "internaldomainname" }}
       persistence:
         enabled: true
         # Setting it to "keep" to avoid removing PVCs during a helm delete
