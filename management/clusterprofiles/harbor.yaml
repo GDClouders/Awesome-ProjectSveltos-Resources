@@ -1,0 +1,174 @@
+# This shows how to deploy Harbor on any cluster having label env:production
+# and expose it via LoadBalancer service
+apiVersion: config.projectsveltos.io/v1beta1
+kind: ClusterProfile
+metadata:
+  name: deploy-harbor
+spec:
+  clusterSelector:
+    matchLabels:
+      env: production
+  syncMode: Continuous
+  helmCharts:
+  - repositoryURL:    https://helm.goharbor.io
+    repositoryName:   harbor
+    chartName:        harbor/harbor
+    chartVersion:     1.19.2
+    releaseName:      harbor
+    releaseNamespace: harbor
+    helmChartAction:  Install
+    values: |
+      expose:
+        # Set how to expose the service. Set the type as "ingress", "clusterIP", "nodePort", "loadBalancer" or "route"
+        # and fill the information in the corresponding section
+        type: route
+        tls:
+          # Enable TLS or not.
+          # Delete the "ssl-redirect" annotations in "expose.ingress.annotations" when TLS is disabled and "expose.type" is "ingress"
+          # Note: if the "expose.type" is "ingress" and TLS is disabled,
+          # the port must be included in the command when pulling/pushing images.
+          # Refer to https://github.com/goharbor/harbor/issues/5291 for details.
+          enabled: true
+          certSource: auto
+          auto:
+            commonName: '{{ index .Cluster.medatata.labels "cluster.x-k8s.io/cluster-name" }}-registry.{{ index .Cluster.metadata.labels "internaldomainname" }}'
+        route:
+          # References to the parent gateways
+          parentRefs:
+              - group: gateway.networking.k8s.io
+                kind: Gateway
+                name: public-gateway
+                namespace: envoy-gateway-system
+          hosts:
+            - '{{ index .Cluster.medatata.labels "cluster.x-k8s.io/cluster-name" }}-registry.{{ index .Cluster.metadata.labels "internaldomainname" }}'
+      externalURL: https://{{ index .Cluster.medatata.labels "cluster.x-k8s.io/cluster-name" }}-registry.{{ index .Cluster.metadata.labels "internaldomainname" }}
+      persistence:
+        enabled: true
+        # Setting it to "keep" to avoid removing PVCs during a helm delete
+        # operation. Leaving it empty will delete PVCs after the chart deleted
+        # (this does not apply for PVCs that are created for internal database
+        # and redis components, i.e. they are never deleted automatically)
+        resourcePolicy: "keep"
+        persistentVolumeClaim:
+          registry:
+            storageClass: '{{ index .Cluster.metadata.labels "storageclass" }}'
+            accessMode: ReadWriteOnce
+            size: 50Gi
+          jobservice:
+            jobLog:
+              storageClass: '{{ index .Cluster.metadata.labels "storageclass" }}'
+              accessMode: ReadWriteOnce
+              size: 1Gi
+          database:
+            storageClass: '{{ index .Cluster.metadata.labels "storageclass" }}'
+            accessMode: ReadWriteOnce
+            size: 2Gi
+          redis:
+            storageClass: '{{ index .Cluster.metadata.labels "storageclass" }}'
+            accessMode: ReadWriteOnce
+            size: 1Gi
+          trivy:
+            storageClass: '{{ index .Cluster.metadata.labels "storageclass" }}'
+            accessMode: ReadWriteOnce
+            size: 5Gi
+        imageChartStorage:
+          type: filesystem
+          filesystem:
+            rootdirectory: /storage
+      harborAdminPassword: "Harbor12345"
+      ipFamily:
+        ipv6:
+          enabled: false
+      imagePullPolicy: IfNotPresent
+      updateStrategy:
+        type: RollingUpdate
+      logLevel: info
+      cache:
+        # default is not enabled.
+        enabled: false
+        # default keep cache for one day.
+        expireHours: 24
+      containerSecurityContext:
+        privileged: false
+        allowPrivilegeEscalation: false
+        seccompProfile:
+          type: RuntimeDefault
+        runAsNonRoot: true
+        capabilities:
+          drop:
+            - ALL
+      nginx:
+        image:
+          repository: docker.io/goharbor/nginx-photon
+          tag: v2.15.2
+        automountServiceAccountToken: false
+        replicas: 1
+        podDisruptionBudget:
+          enabled: false
+          minAvailable: 1
+        revisionHistoryLimit: 10
+        livenessProbe:
+          initialDelaySeconds: 300
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+          successThreshold: 1
+        ## Readiness probe values
+        readinessProbe:
+          initialDelaySeconds: 1
+          periodSeconds: 10
+          timeoutSeconds: 1
+          failureThreshold: 3
+          successThreshold: 1
+
+      portal:
+        image:
+          repository: docker.io/goharbor/harbor-portal
+          tag: v2.15.2
+
+      core:
+        image:
+          repository: docker.io/goharbor/harbor-core
+          tag: v2.15.2
+      jobservice:
+        image:
+          repository: docker.io/goharbor/harbor-jobservice
+          tag: v2.15.2
+
+      registry:
+        registry:
+          image:
+            repository: docker.io/goharbor/registry-photon
+            tag: v2.15.2
+        controller:
+          image:
+            repository: docker.io/goharbor/harbor-registryctl
+            tag: v2.15.2
+      trivy:
+        # enabled the flag to enable Trivy scanner
+        enabled: true
+        image:
+          # repository the repository for Trivy adapter image
+          repository: docker.io/goharbor/trivy-adapter-photon
+          # tag the tag for Trivy adapter image
+          tag: v2.15.2
+      database:
+        # if external database is used, set "type" to "external"
+        # and fill the connection information in "external" section
+        type: internal
+        internal:
+          image:
+            repository: docker.io/goharbor/harbor-db
+            tag: v2.15.2
+      redis:
+        # if external Redis is used, set "type" to "external"
+        # and fill the connection information in "external" section
+        type: internal
+        internal:
+          image:
+            repository: docker.io/goharbor/valkey-photon
+            tag: v2.15.2
+      exporter:
+        image:
+          repository: docker.io/goharbor/harbor-exporter
+          tag: v2.15.2
