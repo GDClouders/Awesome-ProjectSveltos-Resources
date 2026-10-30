@@ -7,7 +7,7 @@ metadata:
 spec:
   clusterSelector:
     matchLabels:
-      env: production
+      registry: enabled
   syncMode: Continuous
   helmCharts:
   - repositoryURL:    https://helm.goharbor.io
