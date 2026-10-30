@@ -29,7 +29,9 @@ spec:
           # the port must be included in the command when pulling/pushing images.
           # Refer to https://github.com/goharbor/harbor/issues/5291 for details.
           enabled: true
-          certSource: auto
+          certSource: secret
+          secret:
+            secretName: '{{ index .Cluster.metadata.labels "wildcard-secret" }}'
           auto:
             commonName: '{{ index .Cluster.metadata.labels "cluster.x-k8s.io/cluster-name" }}-registry.{{ index .Cluster.metadata.labels "internaldomainname" }}'
         route:
