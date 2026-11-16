@@ -1,0 +1,20 @@
+# helm install netbox oci://ghcr.io/netbox-community/netbox-chart/netbox --namespace netbox --create-namespace --version 8.3.93 --values /tmp/netbox-values.yaml
+apiVersion: config.projectsveltos.io/v1beta1
+kind: ClusterProfile
+metadata:
+  name: deploy-cnpg-operator
+spec:
+  clusterSelector:
+    matchLabels:
+      cnpg-operator: enabled
+  syncMode: ContinuousWithDriftDetection
+  helmCharts:
+    - repositoryURL:    https://cloudnative-pg.github.io/charts
+      repositoryName:   cnpg
+      chartName:        cloudnative-pg
+      chartVersion:     0.29.1
+      releaseName:      cnpg
+      releaseNamespace: cnpg-operator
+      helmChartAction:  Install
+      values: |
+        replicaCount: 1
