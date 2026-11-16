@@ -1,4 +1,4 @@
-# helm install netbox oci://ghcr.io/netbox-community/netbox-chart/netbox --namespace netbox --create-namespace --version 8.3.93 --values /tmp/netbox-values.yaml
+# helm install cnpg https://cloudnative-pg.github.io/charts --namespace cnpg-operator --create-namespace --version 0.29.1 --values /tmp/cnpg-values.yaml
 apiVersion: config.projectsveltos.io/v1beta1
 kind: ClusterProfile
 metadata:
