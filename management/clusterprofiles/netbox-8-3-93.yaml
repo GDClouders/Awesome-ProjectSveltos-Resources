@@ -40,7 +40,7 @@ spec:
             name: public-gateway
             namespace: envoy-gateway-system
           hostnames:
-            - netbox.{{ index .Cluster.metadata.labels "internaldomainname" }}
+            - 'netbox.{{ index .Cluster.metadata.labels "internaldomainname" }}'
         worker:
           resources:
             requests:
