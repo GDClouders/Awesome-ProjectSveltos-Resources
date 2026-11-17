@@ -50,7 +50,11 @@ spec:
               enabled: true
               storageClass: '{{ .Cluster.metadata.labels.storageclass }}'
               size: 8Gi
-
+          replica:
+            persistence:
+              enabled: true
+              storageClass: '{{ .Cluster.metadata.labels.storageclass }}'
+              size: 8Gi
         postgresql:
           enabled: true
           primary:
