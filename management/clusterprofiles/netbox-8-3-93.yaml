@@ -31,7 +31,7 @@ spec:
             memory: 2048Mi
         persistence:
           enabled: true
-          storageClass: '{{ index .Cluster.metadata.labels "storageclass" }}'
+          storageClass: {{ index .Cluster.metadata.labels "storageclass" }}
         httpRoute:
           enabled: true
           parentRefs:
@@ -54,12 +54,12 @@ spec:
           primary:
             persistence:
               enabled: true
-              storageClass: '{{ index .Cluster.metadata.labels "storageclass" }}'
+              storageClass: {{ index .Cluster.metadata.labels "storageclass" }}
               size: 8Gi
         postgresql:
           enabled: true
           primary:
             persistence:
               enabled: true
-              storageClass: '{{ index .Cluster.metadata.labels "storageclass" }}'
+              storageClass: {{ index .Cluster.metadata.labels "storageclass" }}
               size: 20Gi
