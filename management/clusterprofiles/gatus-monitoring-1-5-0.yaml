@@ -20,7 +20,7 @@ spec:
         route:
           enabled: "true"
           hosts:
-            - '{{ index .Cluster.metadata.labels "gatus-host" }}'
+            - 'gatus.{{ index .Cluster.metadata.labels "internaldomainname" }}'
           httpsRedirect: "true"
           parentRefs:
             - name: public-gateway
