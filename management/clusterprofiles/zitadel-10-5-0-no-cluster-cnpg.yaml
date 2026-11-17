@@ -1,0 +1,105 @@
+# helm install zitadel oci://ghcr.io/zitadel/zitadel-chart/zitadel --namespace zitadel --create-namespace --version 10.5.0 --values /tmp/zitadel-values.yaml
+apiVersion: config.projectsveltos.io/v1beta1
+kind: ClusterProfile
+metadata:
+  name: deploy-zitadel
+spec:
+  clusterSelector:
+    matchLabels:
+      zitadel-cnpg-cluster: enabled
+  syncMode: ContinuousWithDriftDetection
+  helmCharts:
+    - repositoryURL:    https://charts.zitadel.com 
+      repositoryName:   zitadel
+      chartName:        zitadel
+      chartVersion:     10.5.0
+      releaseName:      zitadel
+      releaseNamespace: zitadel
+      helmChartAction:  Install
+      values: |
+        zitadel:
+          configmapConfig:
+            ExternalSecure: true
+            ExternalDomain: "zitadel.{{ index .Cluster.metadata.labels "internaldomainname" }}"
+            ExternalPort: 443
+
+            TLS:
+              Enabled: false
+
+            FirstInstance:
+              Org:
+                Human:
+                  UserName: "admin"
+                  FirstName: "admin"
+                  LastName: "admin"
+                  DisplayName: "ZITADEL Administrator"
+                  Email:
+                    Address: "admin@example.com"
+                    Verified: true
+                  PasswordChangeRequired: true
+
+          masterkeySecretName: "zitadel-masterkey"
+
+        envVarsSecret: "zitadel-initial-admin"
+
+        env:
+          - name: ZITADEL_DATABASE_POSTGRES_DSN
+            valueFrom:
+              secretKeyRef:
+                name: zitadel-db-dsn-credentials
+                key: dsn
+          - name: ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: zitadel-initial-admin
+                key: password
+
+        replicaCount: 1
+
+        gateway:
+          httpRoute:
+            enabled: true
+            parentRefs:
+              - group: gateway.networking.k8s.io
+                kind: Gateway
+                name: public-gateway
+                namespace: envoy-gateway-system
+            hostnames:
+              - "zitadel.{{ index .Cluster.metadata.labels "internaldomainname" }}"
+            paths:
+              - path: /
+                pathType: PathPrefix
+
+        login:
+          enabled: true
+          gateway:
+            httpRoute:
+              enabled: true
+              parentRefs:
+                - group: gateway.networking.k8s.io
+                  kind: Gateway
+                  name: public-gateway
+                  namespace: envoy-gateway-system
+              hostnames:
+                - "zitadel.{{ index .Cluster.metadata.labels "internaldomainname" }}"
+              paths:
+                - path: /ui/v2/login
+                  pathType: PathPrefix
+
+        cleanupJob:
+          enabled: false
+
+        pdb:
+          enabled: false
+          minAvailable: 1
+
+        postgresql:
+          enabled: true
+          auth:
+            database: zitadel
+            username: zitadel
+            password: zitadel
+            postgresPassword: zitadel
+          primary:
+            persistence:
+              enabled: true
