@@ -2,11 +2,11 @@
 apiVersion: config.projectsveltos.io/v1beta1
 kind: ClusterProfile
 metadata:
-  name: deploy-zitadel
+  name: deploy-zitadel-cnpg-cluster
 spec:
   clusterSelector:
     matchLabels:
-      zitadel-no-cnpg-cluster: enabled
+      zitadel-cnpg-cluster: enabled
   syncMode: ContinuousWithDriftDetection
   helmCharts:
     - repositoryURL:    https://charts.zitadel.com 
