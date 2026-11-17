@@ -99,3 +99,5 @@ spec:
           primary:
             persistence:
               enabled: true
+          global: 
+            storageClassDefault: '{{ index .Cluster.metadata.labels "storageclass" }}'

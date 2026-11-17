@@ -25,6 +25,13 @@ spec:
         backups:
           enabled: false
         cluster:
+          storage:
+            size: 20Gi
+            storageClass: '{{ index .Cluster.metadata.labels "storageclass" }}'
+          walStorage:
+            enabled: true
+            size: 10Gi
+            storageClass: '{{ index .Cluster.metadata.labels "storageclass" }}'
           initdb:
             database: zitadel
             owner: zitadel
