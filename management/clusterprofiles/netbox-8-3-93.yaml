@@ -31,7 +31,7 @@ spec:
             memory: 2048Mi
         persistence:
           enabled: true
-          storageClass: {{ index .Cluster.metadata.labels "local-storage-class" }}
+          storageClass: '{{ index .Cluster.metadata.labels "storageclass" }}'
         httpRoute:
           enabled: true
           parentRefs:
