@@ -20,7 +20,7 @@ spec:
         superuser:
           name: admin
           email: admin@example.com
-          password: "admin"
+          password: admin
         basePath: ""
         resources:
           requests:
@@ -31,35 +31,30 @@ spec:
             memory: 2048Mi
         persistence:
           enabled: true
-          storageClass: {{ index .Cluster.metadata.labels "storageclass" }}
+          storageClass: '{{ .Cluster.metadata.labels.storageclass }}'
+
         httpRoute:
           enabled: true
           parentRefs:
-          - group: gateway.networking.k8s.io
-            kind: Gateway
-            name: public-gateway
-            namespace: envoy-gateway-system
+            - group: gateway.networking.k8s.io
+              kind: Gateway
+              name: public-gateway
+              namespace: envoy-gateway-system
           hostnames:
-            - 'netbox.{{ index .Cluster.metadata.labels "internaldomainname" }}'
-        worker:
-          resources:
-            requests:
-              cpu: 0.5
-              memory: 512Mi
-            limits:
-              cpu: 1
-              memory: 1024Mi
-        valkey: 
+            - 'netbox.{{ .Cluster.metadata.labels.internaldomainname }}'
+
+        valkey:
           enabled: true
           primary:
             persistence:
               enabled: true
-              storageClass: {{ index .Cluster.metadata.labels "storageclass" }}
+              storageClass: '{{ .Cluster.metadata.labels.storageclass }}'
               size: 8Gi
+
         postgresql:
           enabled: true
           primary:
             persistence:
               enabled: true
-              storageClass: {{ index .Cluster.metadata.labels "storageclass" }}
+              storageClass: '{{ .Cluster.metadata.labels.storageclass }}'
               size: 20Gi
