@@ -49,3 +49,17 @@ spec:
             limits:
               cpu: 1
               memory: 1024Mi
+        valkey: 
+          enabled: true
+          primary:
+            persistence:
+              enabled: true
+              storageClass: '{{ index .Cluster.metadata.labels "storageclass" }}'
+              size: 8Gi
+        postgresql:
+          enabled: true
+          primary:
+            persistence:
+              enabled: true
+              storageClass: '{{ index .Cluster.metadata.labels "storageclass" }}'
+              size: 20Gi
