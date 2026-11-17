@@ -8,7 +8,33 @@ spec:
     matchLabels:
       zitadel-cnpg-cluster: enabled
   syncMode: ContinuousWithDriftDetection
+  policyRefs:
+  - kind: GitRepository
+    name: awesome-projectsveltos-resources
+    namespace: flux2
+    path: ./authentication/zitadel-10-5-0/configs
   helmCharts:
+    - repositoryURL:    https://cloudnative-pg.github.io/charts
+      repositoryName:   cnpg
+      chartName:        cluster
+      chartVersion:     0.9.0
+      releaseName:      zitadel-postgress
+      releaseNamespace: zitadel
+      helmChartAction:  Install
+      values: |
+        backups:
+          enabled: false
+        cluster:
+          initdb:
+            database: zitadel
+            owner: zitadel
+            secret:
+              name: zitadel-db-credentials
+          instances: 3
+        mode: standalone
+        type: postgresql
+        version:
+          postgresql: "16"
     - repositoryURL:    https://charts.zitadel.com 
       repositoryName:   zitadel
       chartName:        zitadel
@@ -95,29 +121,3 @@ spec:
 
         postgresql:
           enabled: false
-    - repositoryURL:    https://cloudnative-pg.github.io/charts
-      repositoryName:   cnpg
-      chartName:        cluster
-      chartVersion:     0.9.0
-      releaseName:      zitadel-postgress
-      releaseNamespace: zitadel
-      helmChartAction:  Install
-      values: |
-        backups:
-          enabled: false
-        cluster:
-          initdb:
-            database: zitadel
-            owner: zitadel
-            secret:
-              name: zitadel-db-credentials
-          instances: 3
-        mode: standalone
-        type: postgresql
-        version:
-          postgresql: "16"
-  policyRefs:
-  - kind: GitRepository
-    name: awesome-projectsveltos-resources
-    namespace: flux2
-    path: ./authentication/zitadel-10-5-0/secrets

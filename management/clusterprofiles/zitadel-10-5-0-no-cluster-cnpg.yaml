@@ -32,6 +32,7 @@ spec:
                   UserName: "admin"
                   FirstName: "admin"
                   LastName: "admin"
+                  Password: "zitadel"
                   DisplayName: "ZITADEL Administrator"
                   Email:
                     Address: "admin@example.com"
@@ -43,11 +44,6 @@ spec:
         envVarsSecret: "zitadel-initial-admin"
 
         env:
-          - name: ZITADEL_DATABASE_POSTGRES_DSN
-            valueFrom:
-              secretKeyRef:
-                name: zitadel-db-dsn-credentials
-                key: dsn
           - name: ZITADEL_FIRSTINSTANCE_ORG_HUMAN_PASSWORD
             valueFrom:
               secretKeyRef:

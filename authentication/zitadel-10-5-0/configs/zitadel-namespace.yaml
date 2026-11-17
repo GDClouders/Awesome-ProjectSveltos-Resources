@@ -1,0 +1,7 @@
+---
+# kubectl create namespace zitadel --dry-run=client -oyaml
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: zitadel
