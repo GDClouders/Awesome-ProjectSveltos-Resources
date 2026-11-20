@@ -28,7 +28,7 @@ spec:
             hosts:
               - "grafana.{{ .Cluster.metadata.labels.internaldomainname }}"
             tls:
-              - secretName: '{{ index .Cluster.metadata.labels "wildcard-secret" }}'
+              - secretName: '{{ index .Cluster.metadata.labels `wildcard-secret` }}'
                 hosts:
                   - "grafana.{{ .Cluster.metadata.labels.internaldomainname }}"
           enabled: true
