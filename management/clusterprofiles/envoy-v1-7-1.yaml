@@ -7,6 +7,11 @@ spec:
     matchLabels:
       ingress: envoy
   syncMode: Continuous
+  policyRefs:
+  - kind: GitRepository
+    name: awesome-projectsveltos-resources
+    namespace: flux2
+    path: ./networking/envoy/configs
   helmCharts:
     - repositoryURL:    oci://docker.io/envoyproxy
       repositoryName:   envoyproxy
