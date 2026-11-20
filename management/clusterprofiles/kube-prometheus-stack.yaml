@@ -64,15 +64,15 @@ spec:
                       storage: 50Gi
         alertmanager:
           enabled: true
-            route:
-              main:
-                hostname: 'alertmanager.{{ index .Cluster.metadata.labels "internaldomainname" }}'
-                enabled: true
-                parentRefs:
-                  - group: gateway.networking.k8s.io
-                    kind: Gateway
-                    name: public-gateway
-                    namespace: envoy-gateway-system
+          route:
+            main:
+              hostname: 'alertmanager.{{ index .Cluster.metadata.labels "internaldomainname" }}'
+              enabled: true
+              parentRefs:
+                - group: gateway.networking.k8s.io
+                  kind: Gateway
+                  name: public-gateway
+                  namespace: envoy-gateway-system
           alertmanagerSpec:
             externalUrl: 'https://alertmanager.{{ index .Cluster.metadata.labels "internaldomainname" }}'
             retention: 100h
