@@ -56,7 +56,7 @@ spec:
             storageSpec:
               volumeClaimTemplate:
                 spec:
-                  storageClassName: {{ .Cluster.metadata.labels.storageclass }}
+                  storageClassName: "{{ .Cluster.metadata.labels.storageclass }}"
                   accessModes:
                     - ReadWriteOnce
                   resources:
@@ -79,7 +79,7 @@ spec:
             storage:
               volumeClaimTemplate:
                 spec:
-                  storageClassName: {{ .Cluster.metadata.labels.storageclass }}
+                  storageClassName: "{{ .Cluster.metadata.labels.storageclass }}"
                   accessModes:
                     - ReadWriteOnce
                   resources:
