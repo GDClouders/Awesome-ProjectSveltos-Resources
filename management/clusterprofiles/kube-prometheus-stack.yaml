@@ -24,7 +24,7 @@ spec:
         grafana:
           ingress:
             enabled: true
-            ingressClassName: nginx
+            ingressClassName: envoy
             hosts:
               - "grafana.{{ .Cluster.metadata.labels.internaldomainname }}"
             tls:
@@ -51,7 +51,6 @@ spec:
                   name: public-gateway
                   namespace: envoy-gateway-system
           prometheusSpec:
-            externalUrl: "https://prometheus.{{ .Cluster.metadata.labels.internaldomainname }}"
             retention: 10d
             retentionSize: "40GiB"
             storageSpec:
@@ -76,7 +75,6 @@ spec:
                   name: public-gateway
                   namespace: envoy-gateway-system
           alertmanagerSpec:
-            externalUrl: "https://alertmanager.{{ .Cluster.metadata.labels.internaldomainname }}"
             retention: 100h
             storage:
               volumeClaimTemplate:
