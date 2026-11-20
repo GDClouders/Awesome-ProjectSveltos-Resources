@@ -6,7 +6,12 @@ spec:
   clusterSelector:
     matchLabels:
       kube-prometheus-stack: enabled
-  syncMode: Continuous
+  syncMode: 
+  policyRefs:
+  - kind: GitRepository
+    name: awesome-projectsveltos-resources
+    namespace: flux2
+    path: ./networking/kube-prometheus-stack/configs
   helmCharts:
     - repositoryURL: https://prometheus-community.github.io/helm-charts
       repositoryName: prometheus-community
