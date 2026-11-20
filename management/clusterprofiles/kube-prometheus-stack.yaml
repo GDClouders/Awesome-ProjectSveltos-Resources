@@ -11,7 +11,7 @@ spec:
     - repositoryURL: https://prometheus-community.github.io/helm-charts
       repositoryName: prometheus-community
       chartName: prometheus-community/kube-prometheus-stack
-      chartVersion: 72.6.4
+      chartVersion: 92.11.0
       releaseName: monitoring
       releaseNamespace: monitoring
       helmChartAction: Install
@@ -26,11 +26,11 @@ spec:
             enabled: true
             ingressClassName: nginx
             hosts:
-              - 'grafana.{{ index .Cluster.metadata.labels "internaldomainname" }}'
+              - grafana.{{ .Cluster.metadata.labels.internaldomainname }}
             tls:
-              - secretName: '{{ index .Cluster.metadata.labels "wildcard-secret" }}'
+              - secretName: {{ .Cluster.metadata.labels.wildcard-secret }}
                 hosts:
-                  - 'grafana.{{ index .Cluster.metadata.labels "internaldomainname" }}'
+                  - grafana.{{ .Cluster.metadata.labels.internaldomainname }}
           enabled: true
           adminPassword: admin
           service:
@@ -43,7 +43,7 @@ spec:
           route:
             main:
               hostname: 
-                - 'prometheus.{{ index .Cluster.metadata.labels "internaldomainname" }}'
+                - prometheus.{{ .Cluster.metadata.labels.internaldomainname }}
               enabled: true
               parentRefs:
                 - group: gateway.networking.k8s.io
@@ -51,13 +51,13 @@ spec:
                   name: public-gateway
                   namespace: envoy-gateway-system
           prometheusSpec:
-            externalUrl: 'https://prometheus.{{ index .Cluster.metadata.labels "internaldomainname" }}'
+            externalUrl: https://prometheus.{{ .Cluster.metadata.labels.internaldomainname }}
             retention: 10d
             retentionSize: "40GiB"
             storageSpec:
               volumeClaimTemplate:
                 spec:
-                  storageClassName: '{{ index .Cluster.metadata.labels "storageclass" }}'
+                  storageClassName: {{ .Cluster.metadata.labels.storageclass }}
                   accessModes:
                     - ReadWriteOnce
                   resources:
@@ -68,7 +68,7 @@ spec:
           route:
             main:
               hostname: 
-                - 'alertmanager.{{ index .Cluster.metadata.labels "internaldomainname" }}'
+                - alertmanager.{{ .Cluster.metadata.labels.internaldomainname }}
               enabled: true
               parentRefs:
                 - group: gateway.networking.k8s.io
@@ -76,12 +76,12 @@ spec:
                   name: public-gateway
                   namespace: envoy-gateway-system
           alertmanagerSpec:
-            externalUrl: 'https://alertmanager.{{ index .Cluster.metadata.labels "internaldomainname" }}'
+            externalUrl: https://alertmanager.{{ .Cluster.metadata.labels.internaldomainname }}
             retention: 100h
             storage:
               volumeClaimTemplate:
                 spec:
-                  storageClassName: '{{ index .Cluster.metadata.labels "storageclass" }}'
+                  storageClassName: {{ .Cluster.metadata.labels.storageclass }}
                   accessModes:
                     - ReadWriteOnce
                   resources:
