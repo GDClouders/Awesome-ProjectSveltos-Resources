@@ -1,0 +1,101 @@
+apiVersion: config.projectsveltos.io/v1beta1
+kind: ClusterProfile
+metadata:
+  name: kube-prometheus-stack
+spec:
+  clusterSelector:
+    matchLabels:
+      kube-prometheus-stack: enabled
+  syncMode: Continuous
+  helmCharts:
+    - repositoryURL: https://prometheus-community.github.io/helm-charts
+      repositoryName: prometheus-community
+      chartName: prometheus-community/kube-prometheus-stack
+      chartVersion: 72.6.4
+      releaseName: monitoring
+      releaseNamespace: monitoring
+      helmChartAction: Install
+      values: |
+        crds:
+          enabled: true
+          upgradeJob:
+            enabled: true
+            forceConflicts: true
+        grafana:
+          ingress:
+            enabled: true
+            ingressClassName: nginx
+            hosts:
+              - 'grafana.{{ index .Cluster.metadata.labels "internaldomainname" }}'
+            tls:
+              - secretName: '{{ index .Cluster.metadata.labels "wildcard-secret" }}'
+                hosts:
+                  - 'grafana.{{ index .Cluster.metadata.labels "internaldomainname" }}'
+          enabled: true
+          adminPassword: admin
+          service:
+            type: ClusterIP
+            portName: http-web
+          persistence:
+            enabled: true
+            size: 10Gi
+        prometheus:
+          route:
+            main:
+              hostname: 'prometheus.{{ index .Cluster.metadata.labels "internaldomainname" }}'
+              enabled: true
+              parentRefs:
+                - group: gateway.networking.k8s.io
+                  kind: Gateway
+                  name: public-gateway
+                  namespace: envoy-gateway-system
+          prometheusSpec:
+            externalUrl: 'https://prometheus.{{ index .Cluster.metadata.labels "internaldomainname" }}'
+            retention: 10d
+            retentionSize: "40GiB"
+            storageSpec:
+              volumeClaimTemplate:
+                spec:
+                  storageClassName: '{{ index .Cluster.metadata.labels "storageclass" }}'
+                  accessModes:
+                    - ReadWriteOnce
+                  resources:
+                    requests:
+                      storage: 50Gi
+        alertmanager:
+          enabled: true
+            route:
+              main:
+                hostname: 'alertmanager.{{ index .Cluster.metadata.labels "internaldomainname" }}'
+                enabled: true
+                parentRefs:
+                  - group: gateway.networking.k8s.io
+                    kind: Gateway
+                    name: public-gateway
+                    namespace: envoy-gateway-system
+          alertmanagerSpec:
+            externalUrl: 'https://alertmanager.{{ index .Cluster.metadata.labels "internaldomainname" }}'
+            retention: 100h
+            storage:
+              volumeClaimTemplate:
+                spec:
+                  storageClassName: '{{ index .Cluster.metadata.labels "storageclass" }}'
+                  accessModes:
+                    - ReadWriteOnce
+                  resources:
+                    requests:
+                      storage: 5Gi
+        kube-state-metrics:
+          enabled: true
+        nodeExporter:
+          enabled: true
+        kubeEtcd:
+          enabled: false
+        kubeControllerManager:
+          enabled: true
+        kubeScheduler:
+          enabled: true
+  policyRefs:
+    - kind: ConfigMap
+      namespace: projectsveltos
+      name: monitoring-routes
