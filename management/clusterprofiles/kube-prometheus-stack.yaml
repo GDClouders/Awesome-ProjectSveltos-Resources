@@ -95,7 +95,3 @@ spec:
           enabled: true
         kubeScheduler:
           enabled: true
-  policyRefs:
-    - kind: ConfigMap
-      namespace: projectsveltos
-      name: monitoring-routes
