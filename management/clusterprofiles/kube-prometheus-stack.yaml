@@ -42,7 +42,8 @@ spec:
         prometheus:
           route:
             main:
-              hostname: 'prometheus.{{ index .Cluster.metadata.labels "internaldomainname" }}'
+              hostname: 
+                - 'prometheus.{{ index .Cluster.metadata.labels "internaldomainname" }}'
               enabled: true
               parentRefs:
                 - group: gateway.networking.k8s.io
@@ -66,7 +67,8 @@ spec:
           enabled: true
           route:
             main:
-              hostname: 'alertmanager.{{ index .Cluster.metadata.labels "internaldomainname" }}'
+              hostname: 
+                - 'alertmanager.{{ index .Cluster.metadata.labels "internaldomainname" }}'
               enabled: true
               parentRefs:
                 - group: gateway.networking.k8s.io
