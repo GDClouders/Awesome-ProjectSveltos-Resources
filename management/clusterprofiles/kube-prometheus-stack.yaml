@@ -37,12 +37,15 @@ spec:
             type: ClusterIP
             portName: http-web
           persistence:
+            storageClassName: '{{ .Cluster.metadata.labels.storageclass }}'
+            accessModes:
+              - ReadWriteOnce
             enabled: true
             size: 10Gi
         prometheus:
           route:
             main:
-              hostname: 
+              hostnames: 
                 - "prometheus.{{ .Cluster.metadata.labels.internaldomainname }}"
               enabled: true
               parentRefs:
@@ -66,7 +69,7 @@ spec:
           enabled: true
           route:
             main:
-              hostname: 
+              hostnames: 
                 - "alertmanager.{{ .Cluster.metadata.labels.internaldomainname }}"
               enabled: true
               parentRefs:
