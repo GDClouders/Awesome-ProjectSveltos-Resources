@@ -19,6 +19,10 @@ spec:
       labels:
         app: proxmox-exporter
     spec:
+      volumes:
+        - name: config
+          secret:
+            secretName: proxmox-exporter-config
       containers:
         - name: proxmox-exporter
           image: prompve/prometheus-pve-exporter:3.11.0
