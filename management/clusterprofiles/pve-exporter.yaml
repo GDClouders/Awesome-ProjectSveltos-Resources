@@ -1,0 +1,15 @@
+apiVersion: config.projectsveltos.io/v1beta1
+kind: ClusterProfile
+metadata:
+  name: pve-exporter-prometheus
+spec:
+  continueOnError: true
+  clusterSelector:
+    matchLabels:
+      pve-exporter-prometheus: enabled
+  syncMode: OneTime
+  policyRefs:
+  - kind: GitRepository
+    name: awesome-projectsveltos-resources
+    namespace: flux2
+    path: ./monitoring/pve-exporter-prometheus/configs/

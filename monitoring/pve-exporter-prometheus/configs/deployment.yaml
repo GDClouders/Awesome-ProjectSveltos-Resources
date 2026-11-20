@@ -1,0 +1,65 @@
+# pveum user add prometheus@pve
+# pveum role add PrometheusRole -privs "Sys.Audit"
+# pveum aclmod / -user prometheus@pve -role PrometheusRole
+# pveum user token add prometheus@pve monitoring --privsep 0
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: proxmox-exporter
+  namespace: monitoring
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: proxmox-exporter
+
+  template:
+    metadata:
+      labels:
+        app: proxmox-exporter
+    spec:
+      containers:
+        - name: proxmox-exporter
+          image: prompve/prometheus-pve-exporter:3.11.0
+          imagePullPolicy: IfNotPresent
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          volumeMounts:
+            - name: config
+              mountPath: /etc/prometheus/pve.yml
+              subPath: pve.yml
+          ports:
+            - name: metrics
+              containerPort: 9221
+          env:
+            - name: PVE_USER
+              valueFrom:
+                secretKeyRef:
+                  name: proxmox-exporter
+                  key: pve-user
+            - name: PVE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: proxmox-exporter
+                  key: pve-password
+            - name: PVE_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: proxmox-exporter
+                  key: pve-host
+            - name: PVE_VERIFY_SSL
+              value: "false"
+            - name: PVE_CLUSTER
+              value: "1"
+            - name: PVE_NODE
+              value: "1"
+            - name: PVE_VM
+              value: "1"
+            - name: PVE_STORAGE
+              value: "1"
