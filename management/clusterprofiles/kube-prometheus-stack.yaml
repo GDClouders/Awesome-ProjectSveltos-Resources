@@ -26,11 +26,11 @@ spec:
             enabled: true
             ingressClassName: nginx
             hosts:
-              - grafana.{{ .Cluster.metadata.labels.internaldomainname }}
+              - "grafana.{{ .Cluster.metadata.labels.internaldomainname }}"
             tls:
-              - secretName: {{ index .Cluster.metadata.labels "wildcard-secret" }}
+              - secretName: '{{ index .Cluster.metadata.labels "wildcard-secret" }}'
                 hosts:
-                  - grafana.{{ .Cluster.metadata.labels.internaldomainname }}
+                  - "grafana.{{ .Cluster.metadata.labels.internaldomainname }}"
           enabled: true
           adminPassword: admin
           service:
@@ -43,7 +43,7 @@ spec:
           route:
             main:
               hostname: 
-                - prometheus.{{ .Cluster.metadata.labels.internaldomainname }}
+                - "prometheus.{{ .Cluster.metadata.labels.internaldomainname }}"
               enabled: true
               parentRefs:
                 - group: gateway.networking.k8s.io
@@ -51,7 +51,7 @@ spec:
                   name: public-gateway
                   namespace: envoy-gateway-system
           prometheusSpec:
-            externalUrl: https://prometheus.{{ .Cluster.metadata.labels.internaldomainname }}
+            externalUrl: "https://prometheus.{{ .Cluster.metadata.labels.internaldomainname }}"
             retention: 10d
             retentionSize: "40GiB"
             storageSpec:
@@ -68,7 +68,7 @@ spec:
           route:
             main:
               hostname: 
-                - alertmanager.{{ .Cluster.metadata.labels.internaldomainname }}
+                - "alertmanager.{{ .Cluster.metadata.labels.internaldomainname }}"
               enabled: true
               parentRefs:
                 - group: gateway.networking.k8s.io
@@ -76,7 +76,7 @@ spec:
                   name: public-gateway
                   namespace: envoy-gateway-system
           alertmanagerSpec:
-            externalUrl: https://alertmanager.{{ .Cluster.metadata.labels.internaldomainname }}
+            externalUrl: "https://alertmanager.{{ .Cluster.metadata.labels.internaldomainname }}"
             retention: 100h
             storage:
               volumeClaimTemplate:
